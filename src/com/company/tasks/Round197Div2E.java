@@ -1,163 +1,99 @@
 package com.company.tasks;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.util.StringTokenizer;
+import java.util.Scanner;
 
 public class Round197Div2E {
-    static class FastReader {
-        BufferedReader br;
-        StringTokenizer st;
+    private static Scanner in = new Scanner(System.in);
+    private static int horseQuantity;
+    private static int[] lastHorsesPosition;
 
-        public FastReader() {
-            br = new BufferedReader(new InputStreamReader(System.in));
-        }
+    private static Command[] commandStack = new Command[3];
+    private static int lastIndexInStack = 2;
 
-        String next() {
-            while (st == null || !st.hasMoreElements()) {
-                try {
-                    st = new StringTokenizer(br.readLine());
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-            return st.nextToken();
-        }
-
-        int nextInt() {
-            return Integer.parseInt(next());
-        }
-
-        long nextLong() {
-            return Long.parseLong(next());
-        }
-
-        double nextDouble() {
-            return Double.parseDouble(next());
-        }
-
-        String nextLine() {
-            String str = "";
-            try {
-                str = br.readLine();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            return str;
-        }
-
-        int[] intArr(int n) {
-            int res[] = new int[n];
-            for (int i = 0; i < n; i++)
-                res[i] = nextInt();
-            return res;
-        }
-
-        long[] longArr(int n) {
-            long res[] = new long[n];
-            for (int i = 0; i < n; i++)
-                res[i] = nextLong();
-            return res;
-        }
-    }
-
-    static FastReader in = new FastReader();
-
-    private static int n, requestsQuantity;
-    private static int[] tree;
-    private static int elementsQuantity;
-
-    public static void resolve(){
+    public static void resolve(String args[]){
         enter();
-        fillTree();
-        enterAndResolveRequests();
-    }
-
-    private static void enter(){
-        n = in.nextInt();
-        requestsQuantity = in.nextInt();
-
-        elementsQuantity = 1;
-        for (int i = 0; i < n; i++) {
-            elementsQuantity *= 2;
-        }
-
-        tree = new int[elementsQuantity*2];
-
-        for (int i = 0; i < elementsQuantity; i++) {
-            tree[i] = in.nextInt();
-        }
-    }
-
-    private static void fillTree(){
-        boolean or = true;
-        int len = elementsQuantity;
-        int start = 0;
-        len /= 2;
-        for (int i = 0; i < n; i++) {
-            if (or){
-                orMethod(start, len);
-                or = false;
-            } else{
-                xorMethod(start, len);
-                or = true;
-            }
-
-            start = start + len * 2;
-            len /= 2;
-        }
-    }
-
-    private static void orMethod(int start, int len){
-        int nextStart = start + len * 2;
-        for (int i = 0; i < len; i++) {
-            tree[nextStart + i] = tree[i*2 + start] | tree[i*2 + 1 + start];
-        }
-    }
-
-    private static void xorMethod(int start, int len){
-        int nextStart = start + len * 2;
-        for (int i = 0; i < len; i++) {
-            tree[nextStart + i] = tree[i*2 + start] ^ tree[i*2 + 1 + start];
-        }
-    }
-
-    private static void enterAndResolveRequests(){
-        for (int i = 0; i < requestsQuantity; i++) {
-            int p = in.nextInt();
-            int d = in.nextInt();
-
-            resolveRequest(p - 1, d);
-        }
-    }
-
-    private static void resolveRequest(int changeElementIndex, int newElement){
-        tree[changeElementIndex] = newElement;
-        boolean or = true;
-        int beforeChangeElementIndex = changeElementIndex;
-        int nextChangeElementIndex = changeElementIndex / 2 + elementsQuantity;
-        int d = 0;
-        for (int i = 0; i < n; i++) {
-            if (or){
-                tree[nextChangeElementIndex] = beforeChangeElementIndex % 2 == 0
-                        ? tree[beforeChangeElementIndex] | tree[beforeChangeElementIndex + 1]
-                        : tree[beforeChangeElementIndex] | tree[beforeChangeElementIndex - 1];
-                or = false;
-            } else {
-                tree[nextChangeElementIndex] = beforeChangeElementIndex % 2 == 0
-                        ? tree[beforeChangeElementIndex] ^ tree[beforeChangeElementIndex + 1]
-                        : tree[beforeChangeElementIndex] ^ tree[beforeChangeElementIndex - 1];
-                or = true;
-            }
-            beforeChangeElementIndex = nextChangeElementIndex;
-            nextChangeElementIndex = nextChangeElementIndex / 2 + elementsQuantity;
-        }
-
+        findCommand();
         display();
     }
 
+    private static void enter(){
+        horseQuantity = in.nextInt();
+        lastHorsesPosition = new int[horseQuantity + 1];
+        for (int i = 1; i < lastHorsesPosition.length; i++) {
+            lastHorsesPosition[i] = in.nextInt();
+        }
+    }
+
+    private static void findCommand(){
+        int maxAwayElementIndex = -1;
+        int maxAway = 0;
+        while (true){
+            for (int i = 1; i < lastHorsesPosition.length; i++) {
+                int currentAway = (i - lastHorsesPosition[i]) >= 0
+                        ? i - lastHorsesPosition[i]
+                        : lastHorsesPosition[i] - i;
+                if (maxAway < currentAway){
+                    maxAway = currentAway;
+                    maxAwayElementIndex = i;
+                }
+            }
+
+            //
+            if (maxAwayElementIndex != -1){
+                Command command = lastHorsesPosition[maxAwayElementIndex] > maxAwayElementIndex
+                        ? initCommand(maxAwayElementIndex, lastHorsesPosition[maxAwayElementIndex])
+                        : initCommand(lastHorsesPosition[maxAwayElementIndex], maxAwayElementIndex);
+                reverse(command);
+                setInStack(command);
+                maxAwayElementIndex = -1;
+                maxAway = 0;
+
+                continue;
+            }
+
+            break;
+        }
+
+    }
+
+    private static Command initCommand(int l, int r){
+        return new Command(l, r);
+    }
+
+    private static void reverse(Command command){
+        for (int i = 0, l = command.l, r = command.r; i < (command.r - command.l + 1) / 2; i++, l++, r--) {
+            int tmp = lastHorsesPosition[l];
+            lastHorsesPosition[l] = lastHorsesPosition[r];
+            lastHorsesPosition[r] = tmp;
+        }
+    }
+
+    private static void setInStack(Command command){
+        commandStack[lastIndexInStack] = command;
+        lastIndexInStack--;
+    }
+
+
+
+    private static class Command{
+        int r;
+        int l;
+
+        Command(int l, int r){
+            this.l = l;
+            this.r = r;
+        }
+
+        @Override
+        public String toString() {
+            return l + " " + r;
+        }
+    }
+
     private static void display(){
-        System.out.println(tree[tree.length - 2]);
+        System.out.println(2 - lastIndexInStack);
+        for (int i = lastIndexInStack + 1; i < commandStack.length; i++) {
+            System.out.println(commandStack[i].toString());
+        }
     }
 }
