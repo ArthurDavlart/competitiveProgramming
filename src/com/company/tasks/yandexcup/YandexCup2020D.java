@@ -2,7 +2,7 @@ package com.company.tasks.yandexcup;
 
 public class YandexCup2020D {
 
-    private static java.util.Scanner in = new java.util.Scanner(System.in);
+    private static final java.util.Scanner in = new java.util.Scanner(System.in);
 
     static class MKey{
         int i;
@@ -24,9 +24,6 @@ public class YandexCup2020D {
     private static long[] buffer;
     private static MKey[] keys;
 
-    private static long maxPath = 0;
-    private static long currentPath = 0;
-
     public static void resolve(){
         input();
         findMaxPath();
@@ -41,7 +38,7 @@ public class YandexCup2020D {
         arrayN = initArray(n);
         arrayM = initArray(m);
 
-        int bufferLength = n < m ? n : m;
+        int bufferLength = Math.min(n, m);
 
         buffer = new long[bufferLength];
         keys = new MKey[bufferLength];
@@ -81,7 +78,7 @@ public class YandexCup2020D {
         long tmp = buffer[0] + getCellQuantity(keys[0]);
 
         for (int i = 1; i < nextLevel; i++) {
-            long max = buffer[i - 1] > buffer[i] ? buffer[i - 1] : buffer[i];
+            long max = Math.max(buffer[i - 1], buffer[i]);
             buffer[i - 1] = tmp;
             tmp = max + getCellQuantity(keys[i]);
         }
@@ -116,7 +113,7 @@ public class YandexCup2020D {
 
     private static void fillBufferInDecreaseMode(int nextLeve){
         for (int i = 0; i <= nextLeve ; i++) {
-            long tmp = buffer[i] > buffer[i + 1] ? buffer[i] : buffer[i + 1];
+            long tmp = Math.max(buffer[i], buffer[i + 1]);
             buffer[i] = tmp + getCellQuantity(keys[i]);
         }
     }
@@ -137,20 +134,20 @@ public class YandexCup2020D {
     }
 
     private static void nextNMStagnationKeys(){
-        for (int i = 0; i < keys.length; i++) {
-            keys[i].i += 1;
+        for (MKey key : keys) {
+            key.i += 1;
         }
     }
 
     private static void nextMNStagnationKeys(){
-        for(int i = 0; i < keys.length; i++){
-            keys[i].j += 1;
+        for (MKey key : keys) {
+            key.j += 1;
         }
     }
 
     private static void fillBufferInMNStagnationMode(){
         for (int i = 0; i < buffer.length - 1; i++) {
-            long tmp = buffer[i] > buffer[i + 1] ? buffer[i] : buffer[i + 1];
+            long tmp = Math.max(buffer[i], buffer[i + 1]);
             buffer[i] = tmp + getCellQuantity(keys[i]);
         }
 
@@ -160,7 +157,7 @@ public class YandexCup2020D {
     private static void fillBufferInNMStagnationMode(){
         long tmp = buffer[0] + getCellQuantity(keys[0]);
         for (int i = 1; i < buffer.length; i++) {
-            long max = buffer[i] > buffer[i - 1] ? buffer[i] : buffer[i - 1];
+            long max = Math.max(buffer[i], buffer[i - 1]);
             buffer[i - 1] = tmp;
             tmp = max + getCellQuantity(keys[i]);
         }
