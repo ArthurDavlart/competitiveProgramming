@@ -161,6 +161,8 @@ public class YandexCup2020D {
             buffer[i - 1] = tmp;
             tmp = max + getCellQuantity(keys[i]);
         }
+
+        buffer[buffer.length - 1] = tmp;
     }
 
     private static final long serviceNumber = 1_000_000_000L; //10^9
