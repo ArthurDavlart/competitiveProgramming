@@ -1,10 +1,4 @@
-package com.company;
-
-import com.company.tasks.yandexcup.YandexCup2020C;
-import com.company.tasks.yandexcup.YandexCup2020D;
-
 import java.io.*;
-import java.util.LinkedList;
 import java.util.StringTokenizer;
 
 public class Main {
@@ -67,7 +61,54 @@ public class Main {
     static FastReader in = new FastReader();
 
     public static void main(String args[]) {
-        YandexCup2020D.resolve();
+        resolve();
+    }
+
+    private static int[] arr;
+
+    public static void resolve(){
+        input();
+    }
+
+    private static void input(){
+        int n = in.nextInt();
+        arr = new int[n + 1];
+        int q = in.nextInt();
+
+        for (int i = 1; i < arr.length; i++) {
+            arr[i] = in.nextInt();
+        }
+
+        for (int i = 0; i < q; i++) {
+            int t = in.nextInt();
+            if (t == 1){
+                changeValues(in.nextInt(), in.nextInt());
+            } else {
+                findSubArrayQuantity(in.nextInt(), in.nextInt());
+            }
+        }
+    }
+
+    private static void changeValues(int index, int value){
+        arr[index] = value;
+    }
+
+    private static void findSubArrayQuantity(int l, int r){
+        int quantity = 0;
+        int currentSubElementArray = 1;
+        for (int i = l + 1; i <= r; i++) {
+            if (arr[i] >= arr[i - 1]){
+                currentSubElementArray += 1;
+                continue;
+            }
+
+            quantity += currentSubElementArray * (currentSubElementArray + 1) / 2;
+            currentSubElementArray = 1;
+        }
+
+        quantity += currentSubElementArray * (currentSubElementArray + 1) / 2;
+
+        System.out.println(quantity);
     }
 }
 

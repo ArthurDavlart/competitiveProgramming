@@ -1,11 +1,11 @@
-package com.company.tasks.round742div2;
+package tasks.round742div2;
 
 import java.util.HashMap;
 import java.util.Scanner;
 
 public class Round742Div2A {
     private final static Scanner in = new Scanner(System.in);
-    private static HashMap<Character, Character> keyToKey = new HashMap<>(){{
+    private static HashMap<Character, Character> keyToKey = new HashMap<Character, Character>(){{
         put('L', 'L');
         put('R', 'R');
         put('U', 'D');
