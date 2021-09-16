@@ -1,10 +1,12 @@
-package main.java.tasks.round260div2;
+package tasks.round260div2;
 
 import java.util.ArrayList;
 import java.util.Scanner;
 
 public class Round260Div2E {
     private static Scanner in = new Scanner(System.in);
+
+
 
     private static class DSU{
         private ArrayList<Integer>[] adjacentVertices;
@@ -26,39 +28,40 @@ public class Round260Div2E {
             for (int i = 1; i < store.length; i++) {
                 store[i] = i;
                 rank[i] = 1;
-                adjacentVertices[i] = new ArrayList<>();
+                adjacentVertices[i] = new ArrayList<Integer>();
             }
         }
 
         public void merge(int a, int b){
-            int mainRoot = getRoot(a);
-            int mergedRoot = getRoot(b);
+            int x = getRoot(a);
+            int y = getRoot(b);
 
             adjacentVertices[a].add(b);
             adjacentVertices[b].add(a);
 
-            if (rank[mainRoot] > rank[mergedRoot]){
-                int tmp = mergedRoot;
-                mainRoot = mergedRoot;
-                mergedRoot = tmp;
+            if (rank[x] > rank[y]){
+                int tmp = y;
+                y = x;
+                x = tmp;
             }
 
-            store[mergedRoot] = mainRoot;
-            rank[mainRoot] += rank[mergedRoot];
+            store[x] = y;
+            rank[y] += rank[x];
         }
 
         public void mergeV2(int a, int b){
-            int mainRoot = getRoot(a);
-            int mergedRoot = getRoot(b);
+            int x = getRoot(a);
+            int y = getRoot(b);
 
-            if (rank[mainRoot] > rank[mergedRoot]){
-                int tmp = mergedRoot;
-                mainRoot = mergedRoot;
-                mergedRoot = tmp;
+            if (x == y) return;
+            if (rank[x] > rank[y]){
+                int tmp = y;
+                y = x;
+                x = tmp;
             }
-            store[mergedRoot] = mainRoot;
-            rank[mainRoot] += rank[mergedRoot];
-            diameter[mainRoot] = Math.max(rad(mainRoot) + rad(mergedRoot) + 1,Math.max(diameter[mainRoot], diameter[mergedRoot]));
+            store[x] = y;
+            rank[y] += rank[x];
+            diameter[y] = Math.max(rad(x) + rad(y) + 1, Math.max(diameter[x], diameter[y]));
         }
 
         private int rad(int d){
@@ -90,25 +93,29 @@ public class Round260Div2E {
         private int endLongestPathVertex;
 
         private int findDiameter(int vertex){
-            dfs(vertex, 0);
+            maxDepth = 0;
+            endLongestPathVertex = vertex;
+            dfs(vertex, -1, 0);
 
             int farVertexForCurrentVertex = endLongestPathVertex;
             endLongestPathVertex = -1;
             maxDepth = 0;
 
-            dfs(farVertexForCurrentVertex, 0);
+            dfs(farVertexForCurrentVertex, -1, 0);
 
             return maxDepth;
         }
 
-        private void dfs(int currentVertex, int currentDepth){
+        private void dfs(int currentVertex, int beforeVertex, int currentDepth){
             if (currentDepth > maxDepth){
                 maxDepth = currentDepth;
                 endLongestPathVertex = currentVertex;
             }
 
             for (Integer vertex: adjacentVertices[currentVertex]){
-                dfs(vertex, currentDepth + 1);
+                if (vertex != beforeVertex){
+                    dfs(vertex, currentVertex,currentDepth + 1);
+                }
             }
         }
 
