@@ -2,7 +2,7 @@ package tasks.round743div2;
 
 import java.util.*;
 
-public class Round743Div2E {
+public class Round743Div2C {
 
     private static Scanner in = new Scanner(System.in);
 
