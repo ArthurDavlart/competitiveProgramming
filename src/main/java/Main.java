@@ -60,9 +60,12 @@ public class Main {
     }
 
     static FastReader in = new FastReader();
+    static PrintWriter out;
 
     public static void main(String args[]) {
+        out = new PrintWriter(System.out);
         resolve();
+        out.close();
     }
 
 
@@ -214,7 +217,7 @@ public class Main {
     }
 
     private static void output(int d){
-        System.out.println(d);
+        out.println(d);
     }
 }
 
