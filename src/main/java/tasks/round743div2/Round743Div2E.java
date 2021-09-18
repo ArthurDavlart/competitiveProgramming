@@ -1,73 +1,11 @@
-import java.io.*;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.StringTokenizer;
+package tasks.round743div2;
 
-public class Main {
-    static class FastReader {
-        BufferedReader br;
-        StringTokenizer st;
+import java.util.*;
 
-        public FastReader() {
-            br = new BufferedReader(new InputStreamReader(System.in));
-        }
+public class Round743Div2E {
 
-        String next() {
-            while (st == null || !st.hasMoreElements()) {
-                try {
-                    st = new StringTokenizer(br.readLine());
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-            return st.nextToken();
-        }
+    private static Scanner in = new Scanner(System.in);
 
-        int nextInt() {
-            return Integer.parseInt(next());
-        }
-
-        long nextLong() {
-            return Long.parseLong(next());
-        }
-
-        double nextDouble() {
-            return Double.parseDouble(next());
-        }
-
-        String nextLine() {
-            String str = "";
-            try {
-                str = br.readLine();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            return str;
-        }
-
-        int[] intArr(int n) {
-            int res[] = new int[n];
-            for (int i = 0; i < n; i++)
-                res[i] = nextInt();
-            return res;
-        }
-
-        long[] longArr(int n) {
-            long res[] = new long[n];
-            for (int i = 0; i < n; i++)
-                res[i] = nextLong();
-            return res;
-        }
-    }
-
-    static FastReader in = new FastReader();
-    static PrintWriter out;
-
-    public static void main(String args[]) {
-        out = new PrintWriter(System.out);
-        resolve();
-        out.close();
-    }
 
 
     public static void resolve(){
@@ -152,8 +90,8 @@ public class Main {
         neededReadingQuantity[currentNode] = maxDepth;
     }
 
-    private static void output(int d){
-        out.println(d);
+
+    private static void output(int answer){
+        System.out.println(answer);
     }
 }
-
