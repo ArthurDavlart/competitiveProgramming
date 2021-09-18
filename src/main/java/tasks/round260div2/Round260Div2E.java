@@ -1,69 +1,11 @@
-import java.io.*;
+package tasks.round260div2;
+
 import java.util.ArrayList;
-import java.util.StringTokenizer;
+import java.util.Scanner;
 
-public class Main {
-    static class FastReader {
-        BufferedReader br;
-        StringTokenizer st;
+public class Round260Div2E {
+    private static Scanner in = new Scanner(System.in);
 
-        public FastReader() {
-            br = new BufferedReader(new InputStreamReader(System.in));
-        }
-
-        String next() {
-            while (st == null || !st.hasMoreElements()) {
-                try {
-                    st = new StringTokenizer(br.readLine());
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-            return st.nextToken();
-        }
-
-        int nextInt() {
-            return Integer.parseInt(next());
-        }
-
-        long nextLong() {
-            return Long.parseLong(next());
-        }
-
-        double nextDouble() {
-            return Double.parseDouble(next());
-        }
-
-        String nextLine() {
-            String str = "";
-            try {
-                str = br.readLine();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            return str;
-        }
-
-        int[] intArr(int n) {
-            int res[] = new int[n];
-            for (int i = 0; i < n; i++)
-                res[i] = nextInt();
-            return res;
-        }
-
-        long[] longArr(int n) {
-            long res[] = new long[n];
-            for (int i = 0; i < n; i++)
-                res[i] = nextLong();
-            return res;
-        }
-    }
-
-    static FastReader in = new FastReader();
-
-    public static void main(String args[]) {
-        resolve();
-    }
 
 
     private static class DSU{
@@ -217,4 +159,3 @@ public class Main {
         System.out.println(d);
     }
 }
-
